@@ -58,6 +58,7 @@ public extension Double {
         return Double.random * (max - min) + min
     }
 }
+
 public extension Float {
     /// Returns a random floating point number between 0.0 and 1.0, inclusive.
     public static var random:Float {
@@ -110,4 +111,24 @@ public func ** (num: Double, power: Double) -> Double {
         return num * num
     }
     return pow(num, power)
+}
+
+public extension Array {
+    public mutating func getRandomSubarray(withSize size: Int) -> Array<Element> {
+        var currentCount = self.count
+        var updatesLog: [(first: Int, second: Int)] = []
+        var randomSubarray: Array<Element> = []
+        while currentCount != self.count - size {
+            let i = Int.random(min: 0, max: currentCount - 1)
+            randomSubarray.append(self[i])
+            updatesLog.append((first: i, second: currentCount - 1))
+            (self[i], self[currentCount - 1]) = (self[currentCount - 1], self[i])
+            currentCount -= 1
+        }
+        updatesLog.reverse()
+        for update in updatesLog {
+            (self[update.first], self[update.second]) = (self[update.second], self[update.first])
+        }
+        return randomSubarray
+    }
 }

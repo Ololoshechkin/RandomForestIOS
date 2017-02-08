@@ -60,14 +60,12 @@ class JiniIndexCounter {
         var bestInformativity: Double? = nil
         let dimentions = distribution[0].object.dimentionsCount
         let objectCnt = distribution.count
-        var bestPos: Int? = nil
         
         for curDimention in 0..<dimentions {
             
             let currentComparator = {
                 (obj1: (Object, Int), obj2: (Object, Int)) -> Bool in
-                return obj1.0.feature(number: curDimention) <
-                    obj2.0.feature(number: curDimention)
+                return obj1.0.feature(number: curDimention) < obj2.0.feature(number: curDimention)
             }
             
             let sortedDistribution = distribution.sorted(by: currentComparator)
@@ -76,12 +74,14 @@ class JiniIndexCounter {
             var leftJiniIndex = 0.0, rightJiniIndex = 1.0
             var leftClassCnt = [Double](repeating: 0.0, count: classCnt)
             var rightClassCnt = [Double](repeating: 0.0, count: classCnt)
+            
             for i in 0..<objectCnt {
                 rightClassCnt[getClass(i)] += 1.0
             }
             for curClass in 0..<classCnt {
                 rightJiniIndex -= (rightClassCnt[curClass] / Double(objectCnt)) ** 2
             }
+            
             var pos = 0
             while pos < objectCnt {
                 repeat {
